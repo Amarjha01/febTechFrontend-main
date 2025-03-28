@@ -42,6 +42,26 @@ const VideoGallery = ({ videos }) => (
 const NavGallery = () => {
   const images = [
     {
+      src: "/FebTechGallery/marG1.jpg",
+      alt: "Dummy Image 1",
+    },
+    {
+      src: "/FebTechGallery/marG2.jpg",
+      alt: "Dummy Image 1",
+    },
+    {
+      src: "/FebTechGallery/marG3.jpg",
+      alt: "Dummy Image 1",
+    },
+    {
+      src: "/FebTechGallery/marG4.jpg",
+      alt: "Dummy Image 1",
+    },
+    {
+      src: "/FebTechGallery/marG5.jpg",
+      alt: "Dummy Image 1",
+    },
+    {
       src: "/FebTechGallery/febG2.jpeg",
       alt: "Dummy Image 1",
     },

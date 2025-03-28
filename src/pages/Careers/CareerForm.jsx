@@ -3,6 +3,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import GlobalAxios from "../../../GlobalAxios/GlobalAxios";
 import { PropagateLoader } from "react-spinners";
+import axios from "axios";
 
 const CareerForm = () => {
   const [careerData, setCareerData] = useState({
@@ -12,26 +13,30 @@ const CareerForm = () => {
     apply_for: "",
     file: null,
   });
-
-  const [roles, setRoles] = useState([]);
+console.log('log:' , careerData)
+  const [roles, setRoles] = useState([
+    { id: "web-dev", name: "Web Development" },
+    { id: "graphic-design", name: "Graphic Designing" },
+    { id: "wordpress-dev", name: "WordPress Development" },
+  ]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await GlobalAxios.get("/user/career_options");
-        if (response.data.status === "success") {
-          setRoles(response.data.data);
-        } else {
-          console.error("Failed to fetch roles");
-        }
-      } catch (error) {
-        console.error("Error fetching roles:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchRoles = async () => {
+  //     try {
+  //       const response = await GlobalAxios.get("/user/career_options");
+  //       if (response.data.status === "success") {
+  //         setRoles(response.data.data);
+  //       } else {
+  //         console.error("Failed to fetch roles");
+  //       }
+  //     } catch (error) {
+  //       console.error("Error fetching roles:", error);
+  //     }
+  //   };
 
-    fetchRoles();
-  }, []);
+  //   fetchRoles();
+  // }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -42,27 +47,76 @@ const CareerForm = () => {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   console.log('sub', careerData)
+  //   e.preventDefault();
+  //   setLoading(true);
+
+  //   const formData = new FormData();
+  //   formData.append("full_name", careerData.full_name);
+  //   formData.append("email", careerData.email);
+  //   formData.append("mobile_number", careerData.mobile_number);
+  //   formData.append("apply_for", careerData.apply_for);
+  //   formData.append("file", careerData.file);
+  //  console.log('form data', formData)
+  //   try {
+  //     let response = await fetch("http://localhost:5000/api/career", {
+  //       method: 'POST',
+  //       headers: {
+  //         "Content-Type": "application/json", 
+  //       },
+  //       body: JSON.stringify(careerData), 
+  //     });
+
+  //     if (response.data.status === "success") {
+  //       toast.success("Your application has been submitted successfully!", {
+  //         position: "top-right",
+  //       });
+
+  //       setCareerData({
+  //         full_name: "",
+  //         email: "",
+  //         mobile_number: "",
+  //         apply_for: "",
+  //         file: null,
+  //       });
+
+  //       document.getElementById("file").value = null;
+  //     } else {
+  //       throw new Error("Submission failed");
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to submit your application. Please try again.", {
+  //       position: "top-right",
+  //     });
+  //     console.error("Error submitting form:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
+  
     const formData = new FormData();
     formData.append("full_name", careerData.full_name);
     formData.append("email", careerData.email);
     formData.append("mobile_number", careerData.mobile_number);
     formData.append("apply_for", careerData.apply_for);
     formData.append("file", careerData.file);
-
+  
     try {
-      const response = await GlobalAxios.post("/user/career", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      let response = await fetch("http://localhost:5000/api/career", {
+        method: "POST",
+        body: formData, // ✅ Sending FormData directly
       });
-
-      if (response.data.status === "success") {
-        toast.success("Your application has been submitted successfully!", {
-          position: "top-right",
-        });
-
+  
+      const data = await response.json(); // ✅ Ensure response is parsed properly
+  console.log('response', data)
+      if (data.success === true) {
+        toast.success("Application submitted successfully!", { position: "top-right" });
+  
         setCareerData({
           full_name: "",
           email: "",
@@ -70,21 +124,19 @@ const CareerForm = () => {
           apply_for: "",
           file: null,
         });
-
+  
         document.getElementById("file").value = null;
       } else {
         throw new Error("Submission failed");
       }
     } catch (error) {
-      toast.error("Failed to submit your application. Please try again.", {
-        position: "top-right",
-      });
+      toast.error("Failed to submit application. Try again.", { position: "top-right" });
       console.error("Error submitting form:", error);
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <div
       id="cForm"
@@ -147,7 +199,7 @@ const CareerForm = () => {
             >
               <option value="">Apply For ..?</option>
               {roles.map((role) => (
-                <option key={role.id} value={role.id}>
+                <option className=" text-white" key={role.id} value={role.id}>
                   {role.name}
                 </option>
               ))}

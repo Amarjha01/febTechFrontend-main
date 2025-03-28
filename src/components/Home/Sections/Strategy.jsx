@@ -131,7 +131,7 @@ const Strategy = () => {
         </div>
         <div className="w-[350px] md:w-[800px] lg:w-[38vw] hidden md:block processBg lg:relative z-0  lg:left-[-18%] lg:right-0 2xl:left-[-25%] 2xl:top-[8%] 2xl:w-[698px] rounded-md overflow-hidden">
           <img
-            src="company.webp"
+            src="company.jpg"
             className="w-full h-full"
             alt=""
           />
